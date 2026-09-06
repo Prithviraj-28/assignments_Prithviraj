@@ -1,0 +1,80 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+border = "-" * 100
+#########################################################################
+
+       #Step 1: Read the data from the CSV file into a pandas DataFrame
+
+#########################################################################
+
+
+df = pd.read_csv("assignment 43/PlayPredictor.csv")
+
+#########################################################################
+
+       #Step 2: Exploratory Data Analysis (EDA)
+
+##########################################################################
+
+#In the CSV the play colum is either yes or no. We need to encode it to 1 and 0 for the model to understand it.
+#we are doing the encoding using the LabelEncoder from sklearn.preprocessing
+
+##########################################################################
+
+df.dropna(inplace=True) #Drops the null values in the datasets 
+encoder = LabelEncoder()
+y_encoded = encoder.fit_transform(df['Play'])
+
+X = df.drop(columns=['Play'])
+
+x_encoded = X.copy()
+for col in x_encoded.select_dtypes(include=['object', 'string']).columns:
+    x_encoded[col] = encoder.fit_transform(x_encoded[col])
+
+print(x_encoded.head())
+print(x_encoded.dtypes)
+##################################################################
+
+    #Step 4 : : Split the dataset for traning and testing 
+
+##################################################################
+
+x_train, x_test, y_train, y_test = train_test_split(x_encoded, y_encoded, test_size=0.2, random_state=42)
+
+#########################################################################
+
+       #Step 6 :  Build The Model 
+
+##########################################################################
+
+print(border)
+model = KNeighborsClassifier(n_neighbors=11) 
+
+#########################################################################
+
+       #Step 7 :  Train The Model 
+
+##########################################################################
+
+model = model.fit(x_train,y_train)
+
+#########################################################################
+
+       #Step 8 :  Test The Model 
+
+##########################################################################
+
+y_pred = model.predict(x_test)
+
+accuracy = accuracy_score(y_test,y_pred)
+
+print("Actual Results : ",y_test)
+print(border)
+
+print("Predicted Results : ",y_pred)
+print(border)
+
+print("Accuracy of the model is : ",accuracy*100,"%")
