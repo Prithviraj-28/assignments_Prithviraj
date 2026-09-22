@@ -1,0 +1,77 @@
+# Question 1 create the dataset 
+
+import pandas as pd 
+import matplotlib.pyplot as plt
+import numpy as np
+
+data = {
+    "Name": ["Sagar", "Amit", "Pooja"],
+    "Age": [27, 28, 25],
+    "Math" : [85,70,78],
+    "Science" : [92,88,80],
+    "English" : [85,90,75]
+}
+
+dataframe = pd.DataFrame(data)
+
+print(dataframe)
+
+# Question 2 Print the descriptive Stats 
+
+print("Descriptive statistics of the dataset:")
+print(dataframe.describe())
+
+# Question 3 create a new column "Total" which is the sum of Science and English marks
+
+dataframe["Total"] = dataframe["Science"] + dataframe["English"]+dataframe["Math"]
+print("Dataset with Total column:")
+print(dataframe)
+
+#Question 4 display students who scored more than 85 in Science
+print("Students who scored more than 85 in Science:")
+print(dataframe[dataframe["Science"] > 85])
+
+#Quetion 5 replace pooja with Puja in the Name column
+dataframe["Name"] = dataframe["Name"].replace("Pooja", "Puja")
+print("Dataset after replacing Pooja with Puja:")
+print(dataframe)
+
+#Question 6 sort the dataset based on total in descending order
+dataframe_sorted = dataframe.sort_values(by="Total", ascending=False)
+print("Dataset sorted by Total in descending order:")
+print(dataframe_sorted)
+
+#Question 7 create a barplot for the students and their total marks
+plt.bar(dataframe_sorted["Name"], dataframe_sorted["Total"]) #creates the bar chart
+plt.xlabel("Students")
+plt.ylabel("Total Marks")
+plt.title("Performance of Students")
+plt.grid(True)
+plt.show()
+
+#question 8 create a line plot for amit across all subjects 
+plt.figure(figsize=(10, 6))
+plt.plot(dataframe.columns[2:5], dataframe[dataframe["Name"] == "Amit"].iloc[0, 2:5], marker='*', linestyle='-', color='b')
+plt.title("Amit's Performance Across Subjects")
+plt.xlabel("Subjects")
+plt.ylabel("Marks")
+plt.grid(True)
+plt.show()
+
+#question 9 create a dataframe with missing vaues and fill the missing values with mean of the column
+data_2 = {
+    "Name": ["Sagar", "Amit", "Pooja", "Ravi"],
+    "Age": [27, 28, np.nan, 30],
+    "Math" : [85, np.nan, 78, 90],
+    "Science" : [92, 88, np.nan, 85],
+    "English" : [85, 90, 75, np.nan]
+}
+dataframe_2 = pd.DataFrame(data_2)
+dataframe_2 = dataframe_2.fillna(dataframe_2.select_dtypes(include='number').mean())
+print("Dataset with missing values filled:")
+print(dataframe_2)
+
+#question 10 drop the english column from 1st dataset
+dataframe = dataframe.drop(columns=['English'])
+print("Dataset after dropping the English column:")
+print(dataframe)
