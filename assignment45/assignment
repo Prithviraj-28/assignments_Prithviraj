@@ -1,0 +1,74 @@
+import pandas as pd 
+import matplotlib.pyplot as plt
+import numpy as np
+
+data = {
+    "Name": ["Sagar", "Amit", "Pooja"],
+    "Age": [27, 28, 25],
+    "Math" : [85,70,78],
+    "Science" : [92,88,80],
+    "English" : [85,90,75],
+    "Total" : [85+92+85,70+88+90,78+80+75]
+}
+dataframe = pd.DataFrame(data)
+
+# question 1 normalise the math score using min max scaling 
+dataframe["Math_Normalized"] = (dataframe["Math"] - dataframe["Math"].min()) / (dataframe["Math"].max() - dataframe["Math"].min())
+print("Dataset with normalized Math scores:")
+print(dataframe)
+
+# question 2 create a gender column and perform one hot encoding 
+dataframe["Gender"] = ["Male", "Male", "Female"]
+one_hot_encoded = pd.get_dummies(dataframe["Gender"])
+print("Dataset with one-hot encoded Gender column:")
+print(one_hot_encoded)
+
+#question 3 group the dataset by gender and calculate the average marks in each subject
+grouped = dataframe.groupby("Gender")
+print("Average marks by gender:")
+print(grouped.mean(numeric_only=True))
+
+#question 4 plot a pie chart of subject for sagar
+sagar_data = dataframe[dataframe["Name"] == "Sagar"]
+plt.figure(figsize=(8, 8))
+plt.pie(sagar_data[["Math", "Science", "English"]].iloc[0], 
+        labels=["Math", "Science", "English"], 
+        autopct='%1.1f%%',
+        startangle=140)
+plt.title("Sagar's Marks Distribution") 
+plt.show()
+
+
+#question 5 add a new column named status where students with total marks greater than 250 are "Pass" and others are "Fail"
+dataframe["Status"] = np.where(dataframe["Total"] > 250, "Pass", "Fail")
+print("Dataset with Status column:")    
+print(dataframe)
+
+#question 6 how many students have passed and how many have failed
+status_counts = dataframe["Status"].value_counts()
+print("Status counts:")
+print(status_counts)
+
+#question 7 export the final dataset to a csv file named "student_data.csv"
+dataframe.to_csv("student_data.csv", index=False)
+
+#question 8 plot a histogram of math marks 
+plt.hist(dataframe["Math"], bins=5, color='blue', alpha=0.7)
+plt.title("Distribution of Math Marks") 
+plt.xlabel("Marks")
+plt.ylabel("Number of Students")
+plt.grid(True)
+plt.show()
+
+#Question 9  Rename math column to mathematics 
+
+dataframe.rename(columns={"Math": "Mathematics"}, inplace=True)
+print("Dataset after renaming Math column to Mathematics:")
+print(dataframe)
+
+#question 10 plot a boxplot for english marks to check distribution and outliers
+plt.boxplot(dataframe["English"], patch_artist=True, boxprops=dict(facecolor='lightblue'))
+plt.title("Boxplot of English Marks")
+plt.ylabel("Marks")
+plt.grid(True)  
+plt.show()
